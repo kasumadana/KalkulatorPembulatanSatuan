@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kalkulator Angka Pembulatan</title>
+    <!-- Memuat Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="text-white flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-md mx-auto">
+      <header class="text-center mb-6">
+        <h1
+          class="text-4xl md:text-5xl font-extrabold text-white tracking-tight"
+        >
+          Kalkulator Pembulatan
+        </h1>
+        <p class="text-gray-300 mt-2 text-lg">
+          Masukkan angka dan pilih tingkat pembulatan.
+        </p>
+      </header>
+
+      <div class="glass-card p-6 md:p-8 rounded-2xl shadow-2xl space-y-6">
+        <!-- Kolom Hasil -->
+        <div class="text-center">
+          <h2
+            class="text-sm font-semibold text-blue-200 uppercase tracking-widest mb-2"
+          >
+            Hasil Pembulatan
+          </h2>
+          <p
+            id="result"
+            class="text-5xl md:text-4xl font-bold text-white tracking-wider truncate"
+          >
+            -
+          </p>
+          <p id="errorMessage" class="text-red-300 h-5 mt-2 text-center"></p>
+        </div>
+
+        <!-- Input Angka -->
+        <div>
+          <label
+            for="numberInput"
+            class="block mb-2 text-sm font-medium text-gray-200"
+            >Angka yang akan dibulatkan</label
+          >
+          <input
+            type="number"
+            id="numberInput"
+            step="any"
+            class="bg-gray-900/50 border-2 border-transparent text-white text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3.5 transition"
+            placeholder="Contoh: 1234,56"
+          />
+        </div>
+
+        <!-- Opsi Pembulatan dengan Tombol -->
+        <div>
+          <label class="block mb-2 text-sm font-medium text-gray-200"
+            >Bulatkan ke</label
+          >
+          <div
+            class="flex items-center justify-between bg-gray-900/50 rounded-lg p-2"
+          >
+            <button
+              id="prevBtn"
+              class="p-2 rounded-md hover:bg-white/20 transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 15l7-7 7 7"
+                />
+              </svg>
+            </button>
+            <span
+              id="roundToDisplay"
+              class="text-lg font-semibold text-center flex-grow mx-2"
+            ></span>
+            <button
+              id="nextBtn"
+              class="p-2 rounded-md hover:bg-white/20 transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+/* Menggunakan font Inter sebagai default */
+body {
+  font-family: "Inter", sans-serif;
+  /* Latar belakang gradien yang dinamis */
+  background: linear-gradient(-45deg, #1e3a8a, #312e81, #4c1d95, #23a6d5);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
+
+/* Animasi untuk latar belakang gradien */
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Style untuk efek "kaca buram" pada kartu utama */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* Dukungan untuk Safari */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Style tambahan untuk input number agar tidak menampilkan panah spinner */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  appearance: textfield;
+}
