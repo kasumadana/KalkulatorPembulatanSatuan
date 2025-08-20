@@ -1,12 +1,27 @@
-// --- Elemen DOM ---
+// --- BAGIAN 1: DEKLARASI VARIABEL & ELEMEN DOM ---
+// Komentar: Di sini kita mengambil semua elemen HTML yang akan kita manipulasi
+// dan menyimpannya dalam variabel agar mudah diakses.
+
+// Mengambil elemen input tempat pengguna mengetik angka.
 const numberInput = document.getElementById("numberInput");
+// Mengambil elemen paragraf untuk menampilkan hasil akhir.
 const resultDisplay = document.getElementById("result");
+// Mengambil elemen paragraf untuk menampilkan pesan kesalahan.
 const errorMessage = document.getElementById("errorMessage");
+// Mengambil tombol panah atas untuk navigasi opsi.
 const prevBtn = document.getElementById("prevBtn");
+// Mengambil tombol panah bawah untuk navigasi opsi.
 const nextBtn = document.getElementById("nextBtn");
+// Mengambil elemen span untuk menampilkan teks opsi yang dipilih.
 const roundToDisplay = document.getElementById("roundToDisplay");
 
-// --- Data Opsi Pembulatan ---
+// --- BAGIAN 2: DATA DAN STATE APLIKASI ---
+// Komentar: Di sini kita mendefinisikan data utama yang digunakan oleh aplikasi,
+// seperti daftar opsi pembulatan dan state (status) saat ini.
+
+// Objek yang berisi semua pilihan pembulatan.
+// 'key' (kunci) adalah teks yang ditampilkan (misal: 'Ribu').
+// 'value' (nilai) adalah angka yang digunakan untuk perhitungan (misal: 1000).
 const roundingOptions = {
   Triliun: 1e12,
   "Ratusan Miliar": 1e11,
@@ -34,80 +49,140 @@ const roundingOptions = {
   "Perseratusmiliaran (11 desimal)": 1e-11,
   "Persetriliunan (12 desimal)": 1e-12,
 };
-// Mengubah kunci objek menjadi array untuk navigasi
+// Mengubah kunci dari objek di atas menjadi sebuah array.
+// Ini memudahkan kita untuk bernavigasi menggunakan indeks (angka urutan).
 const optionKeys = Object.keys(roundingOptions);
-let currentOptionIndex = optionKeys.indexOf("Satuan"); // Mulai dari 'Satuan'
+// Variabel untuk menyimpan indeks (posisi) opsi yang sedang dipilih.
+// Kita mulai dari 'Satuan' sebagai pilihan default.
+let currentOptionIndex = optionKeys.indexOf("Satuan");
 
-// --- Fungsi untuk Memperbarui Tampilan & Melakukan Kalkulasi ---
+// --- BAGIAN 3: FUNGSI-FUNGSI UTAMA ---
+// Komentar: Di sini adalah kumpulan fungsi yang menjadi "otak" dari aplikasi.
+
+/**
+ * Fungsi untuk menyesuaikan ukuran font pada elemen hasil.
+ * Tujuannya agar angka yang sangat panjang tidak terpotong.
+ */
+function adjustResultFontSize() {
+  const container = resultDisplay.parentElement; // Ambil elemen pembungkus
+  const maxFontSize = 60; // Ukuran font maksimal dalam pixel (sesuai dengan class 'text-6xl')
+  const minFontSize = 18; // Ukuran font minimal
+  let currentFontSize = maxFontSize;
+
+  // Reset ukuran font ke ukuran maksimal terlebih dahulu
+  resultDisplay.style.fontSize = `${currentFontSize}px`;
+
+  // Loop untuk mengecilkan font jika teks lebih lebar dari kontainernya
+  // scrollWidth adalah lebar asli teks, clientWidth adalah lebar kontainer yang terlihat
+  while (
+    resultDisplay.scrollWidth > container.clientWidth &&
+    currentFontSize > minFontSize
+  ) {
+    currentFontSize--; // Kurangi ukuran font 1px
+    resultDisplay.style.fontSize = `${currentFontSize}px`;
+  }
+}
+
+/**
+ * Fungsi utama yang mengkoordinasikan pembaruan tampilan dan kalkulasi.
+ * Dipanggil setiap kali ada perubahan input atau pilihan.
+ */
 function updateAndCalculate() {
-  // 1. Update tampilan opsi yang dipilih
+  // Langkah 1: Perbarui teks opsi yang sedang dipilih di UI.
   roundToDisplay.textContent = optionKeys[currentOptionIndex];
 
-  // 2. Lakukan kalkulasi jika ada angka di input
+  // Langkah 2: Ambil angka dari input.
   const number = parseFloat(numberInput.value);
+
+  // Langkah 3: Jika input berisi angka yang valid, jalankan pembulatan.
   if (!isNaN(number)) {
     performRounding(number);
   } else {
-    // Jika input kosong atau tidak valid, reset hasil
+    // Jika input kosong atau tidak valid, reset tampilan hasil.
     resultDisplay.textContent = "-";
     errorMessage.textContent = "";
+    // Reset juga ukuran font ke default
+    resultDisplay.style.fontSize = "";
   }
 }
 
-// --- Fungsi Kalkulasi Utama ---
+/**
+ * Fungsi yang melakukan logika inti pembulatan angka.
+ * @param {number} number - Angka yang akan dibulatkan.
+ */
 function performRounding(number) {
+  // Ambil kunci dan nilai dari opsi yang sedang dipilih.
   const roundToKey = optionKeys[currentOptionIndex];
   const roundToValue = roundingOptions[roundToKey];
 
-  errorMessage.textContent = ""; // Hapus pesan error lama
+  // Kosongkan pesan error sebelumnya.
+  errorMessage.textContent = "";
 
   let roundedNumber;
+  // Logika pembulatan:
   if (roundToValue >= 1) {
+    // Jika membulatkan ke bilangan bulat (Puluhan, Ratusan, dll.).
+    // Rumus: Math.round(angka / pembulatan) * pembulatan
     roundedNumber = Math.round(number / roundToValue) * roundToValue;
   } else {
-    const decimalPlaces = -Math.log10(roundToValue);
-    // Menggunakan toFixed() lalu parseFloat untuk menghindari error presisi JavaScript
+    // Jika membulatkan ke tempat desimal.
+    // Hitung jumlah angka di belakang koma.
+    const decimalPlaces = Math.round(-Math.log10(roundToValue));
+    // Gunakan toFixed() untuk membulatkan ke jumlah desimal yang tepat.
     roundedNumber = parseFloat(number.toFixed(decimalPlaces));
   }
 
-  // Tampilkan hasil dengan format lokal
+  // Tampilkan hasil dengan format lokal Indonesia (pemisah ribuan pakai titik).
   resultDisplay.textContent = roundedNumber.toLocaleString("id-ID", {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 12,
+    maximumFractionDigits: 20, // Izinkan banyak angka desimal
   });
+
+  // Panggil fungsi untuk menyesuaikan ukuran font setelah hasil ditampilkan.
+  adjustResultFontSize();
 }
 
-// --- Event Listeners ---
-// Saat halaman dimuat, inisialisasi tampilan
+// --- BAGIAN 4: EVENT LISTENERS (PENDENGAR AKSI) ---
+// Komentar: Bagian ini "menghidupkan" aplikasi dengan menunggu aksi dari pengguna.
+
+// Aksi yang dijalankan pertama kali saat seluruh halaman HTML selesai dimuat.
 document.addEventListener("DOMContentLoaded", updateAndCalculate);
 
-// Tombol navigasi untuk opsi pembulatan
+// Aksi saat tombol panah atas (sebelumnya) diklik.
 prevBtn.addEventListener("click", () => {
-  currentOptionIndex--;
+  currentOptionIndex--; // Kurangi indeks
+  // Jika sudah di awal (indeks < 0), putar ke akhir array.
   if (currentOptionIndex < 0) {
-    currentOptionIndex = optionKeys.length - 1; // Kembali ke akhir jika sudah di awal
+    currentOptionIndex = optionKeys.length - 1;
   }
-  updateAndCalculate();
+  updateAndCalculate(); // Perbarui tampilan dan hitung ulang.
 });
 
+// Aksi saat tombol panah bawah (berikutnya) diklik.
 nextBtn.addEventListener("click", () => {
-  currentOptionIndex++;
+  currentOptionIndex++; // Tambah indeks
+  // Jika sudah di akhir, putar kembali ke awal array (indeks 0).
   if (currentOptionIndex >= optionKeys.length) {
-    currentOptionIndex = 0; // Kembali ke awal jika sudah di akhir
+    currentOptionIndex = 0;
   }
-  updateAndCalculate();
+  updateAndCalculate(); // Perbarui tampilan dan hitung ulang.
 });
 
-// Kalkulasi otomatis saat pengguna mengetik
+// Aksi yang berjalan setiap kali pengguna mengetik di kolom input.
 numberInput.addEventListener("input", () => {
-  const number = parseFloat(numberInput.value);
-  if (isNaN(number) && numberInput.value !== "" && numberInput.value !== "-") {
+  const value = numberInput.value;
+  // Cek jika input tidak valid (bukan angka, bukan kosong, bukan cuma tanda minus).
+  if (isNaN(parseFloat(value)) && value !== "" && value !== "-") {
     errorMessage.textContent = "Input tidak valid.";
     resultDisplay.textContent = "-";
-  } else if (numberInput.value === "") {
+    resultDisplay.style.fontSize = ""; // Reset font
+  } else if (value === "") {
+    // Jika input dikosongkan, reset tampilan.
     resultDisplay.textContent = "-";
     errorMessage.textContent = "";
+    resultDisplay.style.fontSize = ""; // Reset font
   } else {
+    // Jika input valid, langsung hitung.
     updateAndCalculate();
   }
 });

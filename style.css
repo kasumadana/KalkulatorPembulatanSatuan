@@ -1,13 +1,13 @@
-/* Menggunakan font Inter sebagai default */
+/* Mengatur font default untuk seluruh halaman */
 body {
   font-family: "Inter", sans-serif;
-  /* Latar belakang gradien yang dinamis */
+  /* Latar belakang gradien yang dinamis untuk tampilan yang menarik */
   background: linear-gradient(-45deg, #1e3a8a, #312e81, #4c1d95, #23a6d5);
   background-size: 400% 400%;
   animation: gradientBG 15s ease infinite;
 }
 
-/* Animasi untuk latar belakang gradien */
+/* Animasi keyframes untuk menggerakkan latar belakang gradien */
 @keyframes gradientBG {
   0% {
     background-position: 0% 50%;
@@ -20,20 +20,34 @@ body {
   }
 }
 
-/* Style untuk efek "kaca buram" pada kartu utama */
+/* Style utama untuk kartu kalkulator dengan efek "kaca buram" (glassmorphism) */
 .glass-card {
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* Dukungan untuk Safari */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* Dukungan untuk browser Safari */
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Style tambahan untuk input number agar tidak menampilkan panah spinner */
+/* Menghilangkan panah atas/bawah pada input tipe number */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type="number"] {
-  appearance: textfield;
+
+/* Styling untuk FAQ Accordion */
+.faq-item summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  outline: none; /* Menghilangkan outline saat di-klik */
+}
+/* Style untuk ikon panah pada FAQ */
+.faq-item summary .chevron {
+  transition: transform 0.3s ease; /* Animasi rotasi panah */
+}
+/* Saat FAQ terbuka, putar panah 180 derajat */
+.faq-item[open] summary .chevron {
+  transform: rotate(180deg);
 }
